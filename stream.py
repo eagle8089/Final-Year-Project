@@ -16,6 +16,7 @@ class VideoCamera(object):
         validate = []
         success, image = self.video.read()
         response = object_detect(image)
+        response2 = head_pos(image)
         validate.append(response)
 
         # noinspection PyUnresolvedReferences
