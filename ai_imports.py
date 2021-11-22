@@ -1,7 +1,8 @@
 from person_and_phone import *
 from face_detector import get_face_detector, find_faces
-from face_landmarks import get_landmark_model, detect_marks, draw_marks
+from face_landmarks import get_landmark_model, detect_marks
 from head_track import *
+import math
 
 
 def object_detect(image):
@@ -31,13 +32,12 @@ def head_pos(img):
     face_model = get_face_detector()
     landmark_model = get_landmark_model()
     size = img.shape
-    font = cv2.FONT_HERSHEY_SIMPLEX
     # 3D model points.
     model_points = np.array([
         (0.0, 0.0, 0.0),  # Nose tip
         (0.0, -330.0, -65.0),  # Chin
         (-225.0, 170.0, -135.0),  # Left eye left corner
-        (225.0, 170.0, -135.0),  # Right eye right corne
+        (225.0, 170.0, -135.0),  # Right eye right corner
         (-150.0, -150.0, -125.0),  # Left Mouth corner
         (150.0, -150.0, -125.0)  # Right mouth corner
     ])
@@ -58,16 +58,16 @@ def head_pos(img):
             marks[30],  # Nose tip
             marks[8],  # Chin
             marks[36],  # Left eye left corner
-            marks[45],  # Right eye right corne
+            marks[45],  # Right eye right corner
             marks[48],  # Left Mouth corner
             marks[54]  # Right mouth corner
-            ], dtype="double")
+        ], dtype="double")
         dist_coeffs = np.zeros((4, 1))  # Assuming no lens distortion
         (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, camera_matrix,
-                                                                        dist_coeffs, flags=cv2.SOLVEPNP_UPNP)
+                                                                      dist_coeffs, flags=cv2.SOLVEPNP_UPNP)
 
         (nose_end_point2D, jacobian) = cv2.projectPoints(np.array([(0.0, 0.0, 1000.0)]), rotation_vector,
-                                                            translation_vector, camera_matrix, dist_coeffs)
+                                                         translation_vector, camera_matrix, dist_coeffs)
 
         for p in image_points:
             p1 = (int(image_points[0][0]), int(image_points[0][1]))
