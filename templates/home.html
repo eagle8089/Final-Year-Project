@@ -1,0 +1,14 @@
+<html lang="eng">
+  <head>
+    <title>Remote Proctor</title>
+<script>
+document.addEventListener("visibilitychange", function() {
+         document.hidden ? alert("Bro... Don't switch machaa") : "";
+   });
+</script>
+  </head>
+  <body oncopy="return false" oncut="return false" onpaste="return false">
+    <h1>Remote Proctor Detection</h1>
+    <img src="{{ url_for('video_feed') }}" alt="Video Screen" id="vid">
+  </body>
+</html>

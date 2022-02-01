@@ -2,7 +2,42 @@ from person_and_phone import *
 from face_detector import get_face_detector, find_faces
 from face_landmarks import get_landmark_model, detect_marks
 from head_track import *
+# import pyaudio
 import math
+
+
+# def audio_detect():
+#     chunk = 1024
+#     FORMAT = pyaudio.paInt16
+#     CHANNELS = 1
+#     RATE = 44100
+#     RECORD_SECONDS = 5
+#
+#     p = pyaudio.PyAudio()
+#
+#     stream = p.open(format=FORMAT,
+#                     channels=CHANNELS,
+#                     rate=RATE,
+#                     input=True,
+#                     output=True,
+#                     frames_per_buffer=chunk)
+#
+#     print
+#     "* recording"
+#     for i in range(0, 44100 / chunk * RECORD_SECONDS):
+#         data = stream.read(chunk)
+#         if getLevel(data) > THRESHOLD:
+#             break
+#         # check for silence here by comparing the level with 0 (or some threshold) for
+#         # the contents of data.
+#         # then write data or not to a file
+#
+#     print
+#     "* done"
+#
+#     stream.stop_stream()
+#     stream.close()
+#     p.terminate()
 
 
 def object_detect(image):
