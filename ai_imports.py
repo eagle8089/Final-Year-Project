@@ -6,40 +6,6 @@ from head_track import *
 import math
 
 
-# def audio_detect():
-#     chunk = 1024
-#     FORMAT = pyaudio.paInt16
-#     CHANNELS = 1
-#     RATE = 44100
-#     RECORD_SECONDS = 5
-#
-#     p = pyaudio.PyAudio()
-#
-#     stream = p.open(format=FORMAT,
-#                     channels=CHANNELS,
-#                     rate=RATE,
-#                     input=True,
-#                     output=True,
-#                     frames_per_buffer=chunk)
-#
-#     print
-#     "* recording"
-#     for i in range(0, 44100 / chunk * RECORD_SECONDS):
-#         data = stream.read(chunk)
-#         if getLevel(data) > THRESHOLD:
-#             break
-#         # check for silence here by comparing the level with 0 (or some threshold) for
-#         # the contents of data.
-#         # then write data or not to a file
-#
-#     print
-#     "* done"
-#
-#     stream.stop_stream()
-#     stream.close()
-#     p.terminate()
-
-
 def object_detect(image):
     img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     img = cv2.resize(img, (320, 320))
@@ -60,7 +26,7 @@ def object_detect(image):
         elif count > 1:
             print('More than one person detected')
             return 'More than one person detected'
-    return 'None'
+    return ''
 
 
 def head_pos(img):
@@ -127,10 +93,15 @@ def head_pos(img):
 
             if ang1 >= 48:
                 print('Head down')
+                return 'Head down'
             elif ang1 <= -48:
                 print('Head up')
+                return 'Head up'
 
             if ang2 >= 48:
                 print('Head right')
+                return 'Head right'
             elif ang2 <= -48:
                 print('Head left')
+                return 'Head left'
+            return ''

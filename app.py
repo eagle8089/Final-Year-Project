@@ -1,9 +1,19 @@
 from flask import Flask, render_template, Response, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
+import mysql.connector
 import re
 from ai_imports import object_detect, head_pos
 import cv2
+
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="",
+    database="raksha"
+)
+
+mycursor = mydb.cursor()
 
 
 class VideoCamera(object):
@@ -29,6 +39,8 @@ app.config['MYSQL_DB'] = 'raksha'
 
 mysql = MySQL(app)
 
+user_data = ""
+
 
 @app.route('/home.html')
 def home():
@@ -40,6 +52,7 @@ def home():
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
+    global user_data
     msg = ''
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
@@ -51,7 +64,8 @@ def login():
             session['loggedin'] = True
             session['id'] = account['id']
             session['username'] = account['username']
-            return home()
+            user_data = account['username']
+            return render_template('home.html')
         else:
             msg = 'Incorrect username/password!'
     return render_template('login.html', msg=msg)
@@ -63,12 +77,31 @@ def get_frame(img):
 
 
 def gen(camera):
+    global user_data
+    count1 = 0
+    count2 = 0
     while True:
+        val = ""
         img = camera.get_frame()
         ret, frame = cv2.imencode('.jpg', img)
         frame = frame.tobytes()
-        object_detect(img)
-        head_pos(img)
+        val = object_detect(img)
+        if val != "":
+            print("count1 : " + str(count1))
+            count1 = count1 + 1
+            if count1 > 10:
+                count1 = 0
+                mycursor.execute('INSERT INTO log(`username`, `issue`) VALUES (%s,%s)', (user_data, val))
+                mydb.commit()
+            val = ""
+        val = head_pos(img)
+        if val != "":
+            print("count2 : " + str(count2))
+            count2 = count2 + 1
+            if count2 > 10:
+                count2 = 0
+                mycursor.execute('INSERT INTO log(`username`, `issue`) VALUES (%s,%s)', (user_data, val))
+                mydb.commit()
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 

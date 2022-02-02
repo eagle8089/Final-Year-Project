@@ -4,3 +4,6 @@ numpy~=1.21.4
 tensorflow ~=2.7.0
 PyAudio~=0.2.11
 flask-mysqldb
+mysqlclient~=2.1.0
+mysql~=0.0.3
+mysql-connector-python~=8.0.28
